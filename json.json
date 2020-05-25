@@ -1,0 +1,8 @@
+{
+    "available_types": {
+        "update": "Update",
+        "message": "Message",
+        "from": "User",
+        "chat": "Chat"
+    }
+}
