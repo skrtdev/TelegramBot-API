@@ -1,4 +1,5 @@
 class TelegramBot {
-    let i = kek;
-    edited by atom (?)
+    public function __construct($token) {
+        
+    }
 }
