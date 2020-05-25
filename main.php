@@ -36,19 +36,12 @@ class TelegramBot {
 
     private function getObjectType(string $parameter_name){
         $this->json = json_decode(implode(file("json.json")), true);
-        echo "getObjectType $parameter_name";
-        var_dump($this->json['available_types'][$parameter_name]);
-        //var_dump($this->json);
         return isset($this->json['available_types'][$parameter_name]) ? $this->json['available_types'][$parameter_name] : false;
-        return $this->json[$parameter_name];
 
     }
     private function JSONToTelegramObject(array $json, string $parameter_name){
-        echo "JSONToTelegramObject\n";
         foreach($json as $key => $value){
-            echo "$key => $value \n";
             $valuetype = gettype($value);
-
 
             if($valuetype === "array"){
                 if($this->getObjectType($key)){
