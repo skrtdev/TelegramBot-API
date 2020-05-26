@@ -71,7 +71,7 @@ class TelegramBot {
         return isset($this->json['available_types'][$parameter_name]) ? $this->json['available_types'][$parameter_name] : false;
         return $this->json[$parameter_name];
     }
-    //public $tryP = "func";
+
     private function JSONToTelegramObject(array $json, string $parameter_name){
         //echo "JSONToTelegramObject $parameter_name\n";
         foreach($json as $key => $value){
@@ -80,10 +80,7 @@ class TelegramBot {
 
 
             if($valuetype === "array"){
-                //echo "array ($key) \n";
-                //var_dump($this->getObjectType($key));
                 if($this->getObjectType($key)){
-                    //echo "array object";
                     $json[$key] = $this->JSONToTelegramObject($value, $this->getObjectType($key));
                 }
             }
@@ -120,15 +117,12 @@ class TelegramObject extends TelegramBot{
         foreach ($arguments[0] as $key => $value) {
             $data[$key] = $value;
         }
-        //var_dump($data);
 
         return TelegramBot::APICall($this_method->alias, $data, $this->token);
     }
 
     private function presetToValue(string $preset){
-        //var_dump($this);
         $obj = $this;
-        //var_dump($obj);
         foreach(explode("/", $preset) as $key) $obj = $obj->$key;
         return $obj;
     }
