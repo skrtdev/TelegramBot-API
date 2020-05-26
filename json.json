@@ -4,5 +4,28 @@
         "message": "Message",
         "from": "User",
         "chat": "Chat"
+    },
+    "available_methods": {
+        "sendMessage": {
+            "": "",
+            "returns": "Message"
+        },
+        "forwardMessage": {
+            "": "",
+            "returns": "Message"
+        }
+    },
+    "types_methods": {
+        "Message": {
+            "forward": {
+                "alias": "forwardMessage",
+                "presets": {
+                    "from_chat_id": "chat/id",
+                    "message_id": "message_id"
+                }
+            }
+        },
+        "from": "User",
+        "chat": "Chat"
     }
 }

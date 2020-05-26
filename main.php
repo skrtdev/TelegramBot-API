@@ -3,6 +3,7 @@
 class TelegramBot {
     public function __construct(string $token, bool $read_update = true) {
         $this->token = $token;
+
         if($read_update){
             $this->update = json_decode(file_get_contents("php://input"), true);
             $this->update = json_decode('{
@@ -29,40 +30,38 @@ class TelegramBot {
                 }
             }', true);
 
-            $this->update = $this->JSONToTelegramObject($this->update, "Update");
+            $this->update = $this->JSONToTelegramObject((array) $this->update, "Update");
         }
         $this->json = json_decode(implode(file("json.json")), true);
     }
 
-    //private $json = implode(file("json.json"));
 
-    public function APICall(string $method, array $data){
+    public function __call(string $name, array $arguments){
+        return $this->APICall($name, $arguments[0]);
+    }
+
+    public function APICall(string $method, array $data, string $token = null){
+        if(!isset($this->json)) $this->json = json_decode(implode(file("json.json")), true);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->token.'/'.$method);
+        curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.( isset($token) ? $token : $this->token ).'/'.$method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $output = curl_exec($ch);
         curl_close($ch);
-        return json_decode($output, TRUE);
+        $decoded =  json_decode($output, TRUE);
+        if(!$decoded['ok']) return (object) $decoded;
+        if(isset($this->json['available_methods'][$method]['returns'])) return $this->JSONToTelegramObject($decoded['result'], $this->json['available_methods'][$method]['returns']);
     }
 
     private function getObjectType(string $parameter_name){
-        $this->json = json_decode(implode(file("json.json")), true);
-        echo "getObjectType $parameter_name";
-        var_dump($this->json['available_types'][$parameter_name]);
-        //var_dump($this->json);
         return isset($this->json['available_types'][$parameter_name]) ? $this->json['available_types'][$parameter_name] : false;
         return $this->json[$parameter_name];
-
     }
-    //public $tryP = "func";
-    private function JSONToTelegramObject(array $json, string $parameter_name){
-        echo "JSONToTelegramObject\n";
-        foreach($json as $key => $value){
-            echo "$key => $value \n";
-            $valuetype = gettype($value);
 
+    private function JSONToTelegramObject(array $json, string $parameter_name){
+        foreach($json as $key => $value){
+            $valuetype = gettype($value);
 
             if($valuetype === "array"){
                 if($this->getObjectType($key)){
@@ -71,16 +70,54 @@ class TelegramBot {
             }
         }
 
-        return new TelegramObject($parameter_name, $json);
+        return new TelegramObject($parameter_name, $json, $this->token);
     }
 }
 
 class TelegramObject extends TelegramBot{
-    public function __construct(string $type, array $json){
+    public function __construct(string $type, array $json, string $token){
+
         $this->type = $type;
-        $this->json = $json;
-        var_dump(new TelegramBot("a", false));
-        //return $this;
+        $this->token = $token;
+
+        foreach ($json as $key => $value) {
+            $this->$key = $value;
+        }
+        $this->$config = json_decode(implode(file("json.json")), true);
+
+        if(isset($this->$config['types_methods'][$type])){
+
+            foreach($this->$config['types_methods'][$type] as $key => $value){
+
+                $this->{$key."_json"} = $value;
+
+            }
+
+        }
+
+        $this->$config = json_decode(implode(file("json.json")));
+    }
+    public function __call(string $name, array $arguments){
+
+        $this_method = $this->$config->types_methods->{$this->type}->{$name};
+
+        $presets = $this_method->presets;
+        $data = [];
+
+        if(isset($presets)) foreach ($presets as $key => $value) {
+            $data[$key] = $this->presetToValue($value);
+        }
+        foreach ($arguments[0] as $key => $value) {
+            $data[$key] = $value;
+        }
+
+        return TelegramBot::APICall($this_method->alias, $data, $this->token);
+    }
+
+    private function presetToValue(string $preset){
+        $obj = $this;
+        foreach(explode("/", $preset) as $key) $obj = $obj->$key;
+        return $obj;
     }
 }
 
