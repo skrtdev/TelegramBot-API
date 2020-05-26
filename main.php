@@ -8,34 +8,36 @@ class TelegramBot {
 
         if($read_update){
             $this->update = json_decode(file_get_contents("php://input"), true);
-            $this->update = json_decode('{
-                            "update_id": 143957909,
-                            "message": {
-                                "message_id": 210450,
-                                "from": {
-                                    "id": 634408248,
-                                    "is_bot": false,
-                                    "first_name": "⁣",
-                                    "last_name": "𝓖 Ðᴇᴠ ✓✰",
-                                    "username": "gaetano555",
-                                    "language_code": "it"
-                                },
-                                "chat": {
-                                    "id": 634408248,
-                                    "first_name": "⁣",
-                                    "last_name": "𝓖 Ðᴇᴠ ✓✰",
-                                    "username": "gaetano555",
-                                    "type": "private"
-                                },
-                                "date": 1590425893,
-                                "text": "start?"
-                            }
-                        }', true);
 
             $this->update = $this->JSONToTelegramObject( $this->update, "Update");
         }
+        else{
+            $this->update = json_decode('{
+                                    "update_id": 143957909,
+                                    "message": {
+                                        "message_id": 210450,
+                                        "from": {
+                                            "id": 634408248,
+                                            "is_bot": false,
+                                            "first_name": "⁣",
+                                            "last_name": "𝓖 Ðᴇᴠ ✓✰",
+                                            "username": "gaetano555",
+                                            "language_code": "it"
+                                        },
+                                        "chat": {
+                                            "id": 634408248,
+                                            "first_name": "⁣",
+                                            "last_name": "𝓖 Ðᴇᴠ ✓✰",
+                                            "username": "gaetano555",
+                                            "type": "private"
+                                        },
+                                        "date": 1590425893,
+                                        "text": "start?"
+                                    }
+                                }', true);
 
-        //var_dump($this->json);
+            $this->update = $this->JSONToTelegramObject( $this->update, "Update");
+        }
     }
 
     //private $json = json_decode(implode(file("json.json")), true);
@@ -62,17 +64,12 @@ class TelegramBot {
         if(!$decoded['ok']) return (object) $decoded;
 
         if(isset($this->json['available_methods'][$method]['returns'])) return $this->JSONToTelegramObject($decoded['result'], $this->json['available_methods'][$method]['returns']);
-        echo "ah";
+        //echo "ah";
     }
 
     private function getObjectType(string $parameter_name){
-        //$this->json = json_decode(implode(file("json.json")), true);
-        //echo "getObjectType $parameter_name";
-        //var_dump($this->json['available_types'][$parameter_name]);
-        //var_dump($this->json);
         return isset($this->json['available_types'][$parameter_name]) ? $this->json['available_types'][$parameter_name] : false;
         return $this->json[$parameter_name];
-
     }
     //public $tryP = "func";
     private function JSONToTelegramObject(array $json, string $parameter_name){
@@ -103,44 +100,27 @@ class TelegramObject extends TelegramBot{
 
         $this->type = $type;
         $this->token = $token;
-        //private $TelegramBot = $TelegramBot;
-        //$json = json_decode(json_encode((object) $json));
+
         foreach ($json as $key => $value) {
             $this->$key = $value;
         }
 
-        $this->config = json_decode(implode(file("json.json")), true);
-        //var_dump($config['available_methods'][$type]);
-
-
-
         $this->config = json_decode(implode(file("json.json")));
-        //var_dump($this->$config);
-        //return $this;
     }
     public function __call(string $name, array $arguments){
-        //var_dump($this->{$name."_json"});
 
-        //echo $this->presetToValue($this, $this->{$name."_json"}['presets']['from_chat_id']);
-        //$this_method = $this->{$name."_json"};
-        $this_method = $this->  config->types_methods->{$this->type}->{$name};
+        $this_method = $this->config->types_methods->{$this->type}->{$name};
 
-        //var_dump($this->$config->types_methods->{$this->type}->{$name});
-        var_dump($this_method);
-        //7$presets = $this_method['presets'];
         $presets = $this_method->presets;
         $data = [];
         if(isset($presets)) foreach ($presets as $key => $value) {
             $data[$key] = $this->presetToValue($value);
-            trigger_error("$key = ".$this->presetToValue($value)." ($value)");
         }
         else trigger_error("no presets");
         foreach ($arguments[0] as $key => $value) {
             $data[$key] = $value;
         }
         //var_dump($data);
-
-        //var_dump(parent);
 
         return TelegramBot::APICall($this_method->alias, $data, $this->token);
     }
@@ -149,12 +129,7 @@ class TelegramObject extends TelegramBot{
         //var_dump($this);
         $obj = $this;
         //var_dump($obj);
-        foreach(explode("/", $preset) as $key){
-
-            $obj = $obj->$key;
-            //if($preset === "message/chat/id") var_dump($obj);
-
-        }
+        foreach(explode("/", $preset) as $key) $obj = $obj->$key;
         return $obj;
     }
 }
