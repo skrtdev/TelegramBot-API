@@ -2,13 +2,19 @@
 An elegant, Object-Oriented, reliable PHP Telegram Bot Interface
 
 
+## Deal with it
+In order to start using ---it---, you just need to create the class
+`$Bot = new TelegramBot("YOUR_TOKEN");`
+
+
+## Example
 An example code of a simple bot that just forward you back what you send him.
 
 ```php
 header('Content-Type: application/json');
 require("main.php");
 
-$Bot = new TelegramBot("957563264:AAHBVJFr0jwUnXDhKdpdC6Lu_1T63c23z2U", true, [
+$Bot = new TelegramBot("YOUR_TOKEN", true, [
     "json_payload" => true
 ]);
 
