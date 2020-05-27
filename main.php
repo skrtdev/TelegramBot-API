@@ -1,8 +1,9 @@
 <?php
 
 class TelegramBot {
-    public function __construct(string $token, bool $read_update = true) {
+    public function __construct(string $token, bool $read_update = true, array $settings = []) {
         $this->token = $token;
+        $this->settings = (object) $settings;
 
         $this->json = json_decode(implode(file("json.json")), true);
 
@@ -40,6 +41,8 @@ class TelegramBot {
         }
     }
 
+    private $payloaded = false;
+
     //private $json = json_decode(implode(file("json.json")), true);
 
     //private $json = json_decode(implode(file("json.json")), true);
@@ -52,6 +55,14 @@ class TelegramBot {
     }
 
     public function APICall(string $method, array $data, string $token = null){
+        //echo "payloaded: ";
+        //var_dump($this->payloaded);
+        if($this->settings->json_payload and !$this->payloaded){
+            $this->payloaded = true;
+            $data['method'] = $method;
+            echo json_encode($data);
+            return true;
+        }
         if(!isset($this->json)) $this->json = json_decode(implode(file("json.json")), true);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.( isset($token) ? $token : $this->token ).'/'.$method);
@@ -61,7 +72,12 @@ class TelegramBot {
         $output = curl_exec($ch);
         curl_close($ch);
         $decoded =  json_decode($output, TRUE);
-        if(!$decoded['ok']) return (object) $decoded;
+        if($decoded['ok'] !== true){
+            if($this->settings->debug){
+                return $this->APICall("sendMessage", ["chat_id" => 634408248, "text" => print_r($decoded, true)], $token);
+            }
+            return (object) $decoded;
+        }
 
         if(isset($this->json['available_methods'][$method]['returns'])) return $this->JSONToTelegramObject($decoded['result'], $this->json['available_methods'][$method]['returns']);
         //echo "ah";
@@ -88,15 +104,15 @@ class TelegramBot {
 
         //var_dump($json);
 
-        return new TelegramObject($parameter_name, $json, $this->token);
+        return new TelegramObject($parameter_name, $json, $this);
     }
 }
 
 class TelegramObject extends TelegramBot{
-    public function __construct(string $type, array $json, string $token){
+    public function __construct(string $type, array $json, TelegramBot $TelegramBot){
 
         $this->type = $type;
-        $this->token = $token;
+        $this->TelegramBot = $TelegramBot;
 
         foreach ($json as $key => $value) {
             $this->$key = $value;
@@ -118,7 +134,7 @@ class TelegramObject extends TelegramBot{
             $data[$key] = $value;
         }
 
-        return TelegramBot::APICall($this_method->alias, $data, $this->token);
+        return $this->TelegramBot->APICall($this_method->alias, $data);
     }
 
     private function presetToValue(string $preset){
