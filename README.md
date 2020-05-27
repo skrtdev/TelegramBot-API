@@ -18,9 +18,7 @@ $Bot = new TelegramBot("YOUR_TOKEN", true, [
     "json_payload" => true
 ]);
 
-$update = $Bot->update;
-
-$update->message->forward([
+$Bot->update->message->forward([
     "chat_id" => $update->message->chat->id
 ]);
 ```
