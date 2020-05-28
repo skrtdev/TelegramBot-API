@@ -1,8 +1,9 @@
 # Documentation
 
 
-## Available Methods
+#### Available Methods
 [sendMessage](#sendMessage)
+
 [forwardMessage](#sendMessage)
 
 ## sendMessage
