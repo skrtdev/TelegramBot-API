@@ -1,6 +1,7 @@
 # Documentation
 --------
-All the BOTApi's methods can be used as methods of the TelegramBot class. There are only this library own methods
+> All the BOTApi's methods can be used as methods of the TelegramBot class.
+> There are only this library own methods
 --------
 
 ## Creating the class
