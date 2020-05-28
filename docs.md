@@ -122,4 +122,5 @@ $chat->deleteMessage([
 /* or simply */
 
 // Chat object
-$chat->deleteMessage(0123456789);```
+$chat->deleteMessage(0123456789); // just the message_id of the target message
+```
