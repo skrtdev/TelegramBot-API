@@ -1,7 +1,9 @@
 <?php
 
 class TelegramBot {
-    private $token, $settings, $json;
+    //private $token, $settings, $json;
+    private $token, $settings;
+
 
 
     public function __construct(string $token, bool $read_update = true, array $settings = []) {
@@ -40,7 +42,7 @@ class TelegramBot {
                                     }
                                 }', true);
 
-            $this->update = $this->JSONToTelegramObject( $this->update, "Update");
+            $this->update = $this->JSONToTelegramObject($this->update, "Update");
         }
     }
 
@@ -76,7 +78,15 @@ class TelegramBot {
             return (object) $decoded;
         }
 
-        if(isset($this->json['available_methods'][$method]['returns'])) return $this->JSONToTelegramObject($decoded['result'], $this->json['available_methods'][$method]['returns']);
+        if($this->getMethodReturned($method)) return $this->JSONToTelegramObject($decoded['result'], $this->getMethodReturned($method));
+    }
+
+    private function getMethodReturned(string $method){
+        foreach ($this->json['available_methods_regxs'] as $key => $value) {
+            //$this->APICall("sendMessage", ["chat_id" => 634408248, "text" => base64_encode($key)]);
+            if(preg_match('/'.base64_decode($key).'/', $method) === 1) return $value['returns'];
+        }
+        return isset($this->json['available_methods'][$method]['returns']) ? $this->json['available_methods'][$method]['returns'] : false;
     }
 
     private function getObjectType(string $parameter_name){

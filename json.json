@@ -1,72 +1,83 @@
 {
-    "available_types": {
-        "update": "Update",
-        "message": "Message",
-        "from": "User",
-        "chat": "Chat"
-    },
-    "available_methods": {
-        "getMe": {
-            "returns": "User"
-        },
-        "sendMessage": {
-            "returns": "Message"
-        },
-        "forwardMessage": {
-            "returns": "Message"
-        }
-    },
-    "types_methods": {
-        "Update": {
-            "reply": {
-                "alias": "sendMessage",
-                "presets": {
-                    "chat_id": "message/chat/id"
-                },
-
-            }
-        },
-        "Message": {
-            "forward": {
-                "alias": "forwardMessage",
-                "presets": {
-                    "from_chat_id": "chat/id",
-                    "message_id": "message_id"
-                },
-                "just_one_parameter_needed": "chat_id"
-            },
-            "delete": {
-                "alias": "deleteMessage",
-                "presets": {
-                    "chat_id": "chat/id",
-                    "message_id": "message_id"
-                },
-                "no_more_parameters_needed": true
-            }
-        },
-        "Chat": {
-            "sendMessage": {
-                "alias": "sendMessage",
-                "presets": {
-                    "chat_id": "id"
-                },
+	"available_types": {
+		"update": "Update",
+		"message": "Message",
+		"from": "User",
+		"chat": "Chat"
+	},
+	"available_methods_regxs": {
+		"c2VuZFx3Kw==": {
+			"returns": "Message"
+		}
+	},
+	"available_methods": {
+		"getMe": {
+			"returns": "User"
+		},
+		"forwardMessage": {
+			"returns": "Message"
+		},
+		"editMessageLiveLocation": {
+			"returns": "Message"
+		},
+		"stopMessageLiveLocation": {
+			"returns": "Message"
+		},
+		"sendLocation": {
+			"returns": "Message"
+		}
+	},
+	"types_methods": {
+		"Update": {
+			"reply": {
+				"alias": "sendMessage",
+				"presets": {
+					"chat_id": "message/chat/id"
+				},
                 "just_one_parameter_needed": "text"
-            },
-            "forwardTo": {
-                "alias": "forwardMessage",
-                "presets": {
-                    "chat_id": "id",
-                }
-            },
-            "deleteMessage": {
-                "alias": "deleteMessage",
-                "presets": {
-                    "chat_id": "id"
-                },
-                "just_one_parameter_needed": "message_id"
-            }
-        },
-        "from": "User",
-        "chat": "Chat"
-    }
+			}
+		},
+		"Message": {
+			"forward": {
+				"alias": "forwardMessage",
+				"presets": {
+					"from_chat_id": "chat/id",
+					"message_id": "message_id"
+				},
+				"just_one_parameter_needed": "chat_id"
+			},
+			"delete": {
+				"alias": "deleteMessage",
+				"presets": {
+					"chat_id": "chat/id",
+					"message_id": "message_id"
+				},
+				"no_more_parameters_needed": true
+			}
+		},
+		"Chat": {
+			"sendMessage": {
+				"alias": "sendMessage",
+				"presets": {
+					"chat_id": "id"
+				},
+				"just_one_parameter_needed": "text"
+			},
+			"forwardTo": {
+				"alias": "forwardMessage",
+				"presets": {
+					"chat_id": "id"
+				}
+			},
+			"deleteMessage": {
+				"alias": "deleteMessage",
+				"presets": {
+					"chat_id": "id"
+				},
+				"just_one_parameter_needed": "message_id"
+			}
+		},
+		"from": "User",
+		"chat": "Chat"
+	}
 }
