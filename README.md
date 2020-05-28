@@ -24,3 +24,5 @@ $Bot->update->message->forward([
 ```
 
 Using `"json_payload" => true` will print the first api call as payload, making it faster
+
+More info in the [Documentation](docs.md)

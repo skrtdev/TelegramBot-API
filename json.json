@@ -16,12 +16,43 @@
         }
     },
     "types_methods": {
+        "Update": {
+            "reply": {
+                "alias": "sendMessage",
+                "presets": {
+                    "chat_id": "message/chat/id"
+                }
+            }
+        },
         "Message": {
             "forward": {
                 "alias": "forwardMessage",
                 "presets": {
                     "from_chat_id": "chat/id",
                     "message_id": "message_id"
+                },
+                "just_one_parameter_needed": "chat_id"
+            },
+            "delete": {
+                "alias": "deleteMessage",
+                "presets": {
+                    "chat_id": "chat/id",
+                    "message_id": "message_id"
+                },
+                "no_more_parameters_needed": true
+            }
+        },
+        "Chat": {
+            "sendMessage": {
+                "alias": "sendMessage",
+                "presets": {
+                    "chat_id": "id"
+                }
+            },
+            "forwardTo": {
+                "alias": "forwardMessage",
+                "presets": {
+                    "chat_id": "id",
                 }
             }
         },
