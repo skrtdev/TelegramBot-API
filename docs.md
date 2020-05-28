@@ -1,7 +1,8 @@
 # Documentation
+--------
 
 All the BOTApi's methods can be used as methods of the TelegramBot class
---------
+
 ## Creating the class
 Create a such variable (in this Documentation it's called Bot) and instanciate the TelegramBot Class. Parameters are:
    * token (string)
