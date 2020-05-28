@@ -1,6 +1,9 @@
 <?php
 
 class TelegramBot {
+    private $token, $settings, $json;
+
+
     public function __construct(string $token, bool $read_update = true, array $settings = []) {
         $this->token = $token;
         $this->settings = (object) $settings;
