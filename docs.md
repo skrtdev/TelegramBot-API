@@ -20,6 +20,22 @@ $from = $message->from;
    * [sendMessage](#sendMessage)
    * [forwardMessage](#forwardMessage)
 
+#### Setup Script
+All the methods explained here suppose to be in a script with this setup:
+```php
+header('Content-Type: application/json');
+require("main.php");
+
+$Bot = new TelegramBot("YOUR_TOKEN", true, [
+   "json_payload" => true
+]);
+
+$update = $Bot->update;
+$message = $update->message;
+$chat = $message->chat;
+$from = $message->from;
+```
+
 ### reply
 reply can be used only as a method of an Update Object.
 reply acts just like sendMessage, sending a message in the Update chat with the specified text.
@@ -34,7 +50,6 @@ $update->reply("text"); // just the text of the message
 sendMessage can be used directly as a method of the main class, or as a metod of a Chat Object.
 
 ```php
-
 // main class
 $Bot->sendMessage([
     "chat_id" => 01234567,
@@ -51,7 +66,6 @@ $chat->sendMessage([
 forwardMessage can be used directly as a method of the main class, as a method of a Message Object (just forwards that message) or as a metod of a Chat Object, (as forwardTo method), in order to forward in that Chat.
 
 ```php
-
 // main class
 $Bot->forwardMessage([
     "chat_id" => 01234567,
