@@ -1,6 +1,12 @@
 # Documentation
 
-All the methods explained here suppose to be in a script with this setup:
+## Creating the class
+Create a such variable (in this Documentation is called Bot) and instanciate the TelegramBot Class. Parameters are:
+   * token (string)
+   * read_update (boolean)
+   * settings (array)
+
+A simple example:
 ```php
 header('Content-Type: application/json');
 require("main.php");
@@ -8,12 +14,8 @@ require("main.php");
 $Bot = new TelegramBot("YOUR_TOKEN", true, [
     "json_payload" => true
 ]);
-
-$update = $Bot->update;
-$message = $update->message;
-$chat = $message->chat;
-$from = $message->from;
 ```
+In this example, the settings array contains a key json_payload set to true. Doing so, the first API Call made will be print as payload, and suddenly processed by Telegram, making the bot faster
 
 ### Available Methods
    * [reply](#reply)
