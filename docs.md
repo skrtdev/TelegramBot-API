@@ -16,8 +16,19 @@ $from = $message->from;
 ```
 
 ### Available Methods
+   * [reply](#reply)
    * [sendMessage](#sendMessage)
    * [forwardMessage](#forwardMessage)
+
+### reply
+reply can be used only as a method of an Update Object.
+reply acts just like sendMessage, sending a message in the Update chat with the specified text.
+
+```php
+// Update object
+$update->reply("text"); // just the text of the message
+```
+
 
 ### sendMessage
 sendMessage can be used directly as a method of the main class, or as a metod of a Chat Object.
@@ -52,7 +63,7 @@ $message->forward(01234567); // just the chat_id of the target chat
 
 // Chat object (forwardTo)
 $chat->forwardTo([
-    "from_chat_id": 01234567,
+    "from_chat_id" => 01234567,
     "message_id" => 0123456789
 ]);
 ```
