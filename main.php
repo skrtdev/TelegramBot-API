@@ -43,27 +43,20 @@ class TelegramBot {
 
     private $payloaded = false;
 
-    //private $json = json_decode(implode(file("json.json")), true);
-
-    //private $json = json_decode(implode(file("json.json")), true);
-    //public $jsona = file_get_contents("json.json");
-
-
-
     public function __call(string $name, array $arguments){
         return $this->APICall($name, $arguments[0]);
     }
 
     public function APICall(string $method, array $data, string $token = null){
-        //echo "payloaded: ";
-        //var_dump($this->payloaded);
         if($this->settings->json_payload and !$this->payloaded){
             $this->payloaded = true;
             $data['method'] = $method;
             echo json_encode($data);
             return true;
         }
+
         if(!isset($this->json)) $this->json = json_decode(implode(file("json.json")), true);
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.( isset($token) ? $token : $this->token ).'/'.$method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -72,6 +65,7 @@ class TelegramBot {
         $output = curl_exec($ch);
         curl_close($ch);
         $decoded =  json_decode($output, TRUE);
+
         if($decoded['ok'] !== true){
             if($this->settings->debug){
                 return $this->APICall("sendMessage", ["chat_id" => 634408248, "text" => print_r($decoded, true)], $token);
@@ -80,12 +74,10 @@ class TelegramBot {
         }
 
         if(isset($this->json['available_methods'][$method]['returns'])) return $this->JSONToTelegramObject($decoded['result'], $this->json['available_methods'][$method]['returns']);
-        //echo "ah";
     }
 
     private function getObjectType(string $parameter_name){
         return isset($this->json['available_types'][$parameter_name]) ? $this->json['available_types'][$parameter_name] : false;
-        return $this->json[$parameter_name];
     }
 
     private function JSONToTelegramObject(array $json, string $parameter_name){
@@ -94,15 +86,12 @@ class TelegramBot {
             //echo "$key => $value \n";
             $valuetype = gettype($value);
 
-
             if($valuetype === "array"){
                 if($this->getObjectType($key)){
                     $json[$key] = $this->JSONToTelegramObject($value, $this->getObjectType($key));
                 }
             }
         }
-
-        //var_dump($json);
 
         return new TelegramObject($parameter_name, $json, $this);
     }
@@ -121,7 +110,6 @@ class TelegramObject extends TelegramBot{
         $this->config = json_decode(implode(file("json.json")));
     }
     public function __call(string $name, array $arguments){
-
         $this_method = $this->config->types_methods->{$this->type}->{$name};
 
         $presets = $this_method->presets;
@@ -130,8 +118,13 @@ class TelegramObject extends TelegramBot{
             $data[$key] = $this->presetToValue($value);
         }
         else trigger_error("no presets");
-        foreach ($arguments[0] as $key => $value) {
+        if(gettype($arguments[0]) === "array") foreach ($arguments[0] as $key => $value) {
             $data[$key] = $value;
+        }
+        else{
+            if($this_method->just_one_parameter_needed !== null) $data[$this_method->just_one_parameter_needed] = $arguments[0];
+            elseif($this_method->no_more_parameters_needed === null) throw new Exception("TelegramObject::$name called without parameters." );
+
         }
 
         return $this->TelegramBot->APICall($this_method->alias, $data);

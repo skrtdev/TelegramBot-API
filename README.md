@@ -4,11 +4,13 @@ An elegant, Object-Oriented, reliable PHP Telegram Bot Interface
 
 ## Deal with it
 In order to start using ---it---, you just need to create the class
-`$Bot = new TelegramBot("YOUR_TOKEN");`
+```
+$Bot = new TelegramBot("YOUR_TOKEN");
+```
 
 
 ## Example
-An example code of a simple bot that just forward you back what you send him.
+An example code of a simple bot that just forwards back what you send.
 
 ```php
 header('Content-Type: application/json');
