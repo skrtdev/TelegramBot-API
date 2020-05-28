@@ -1,5 +1,19 @@
 # Documentation
 
+All the methods explained here suppose to be in a script with this setup:
+```php
+header('Content-Type: application/json');
+require("main.php");
+
+$Bot = new TelegramBot("YOUR_TOKEN", true, [
+    "json_payload" => true
+]);
+
+$update = $Bot->update;
+$message = $update->message;
+$chat = $message->chat;
+$from = $message->from;
+```
 
 ### Available Methods
 [sendMessage](#sendMessage)
