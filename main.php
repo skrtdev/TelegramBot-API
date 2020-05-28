@@ -82,11 +82,12 @@ class TelegramBot {
     }
 
     private function getMethodReturned(string $method){
+        if( isset($this->json['available_methods'][$method]['returns']) ) return $this->json['available_methods'][$method]['returns'];
         foreach ($this->json['available_methods_regxs'] as $key => $value) {
             //$this->APICall("sendMessage", ["chat_id" => 634408248, "text" => base64_encode($key)]);
             if(preg_match('/'.base64_decode($key).'/', $method) === 1) return $value['returns'];
         }
-        return isset($this->json['available_methods'][$method]['returns']) ? $this->json['available_methods'][$method]['returns'] : false;
+        return false;
     }
 
     private function getObjectType(string $parameter_name){
