@@ -54,7 +54,7 @@
             "forwardTo": {
                 "alias": "forwardMessage",
                 "presets": {
-                    "chat_id": "id",
+                    "chat_id": "id"
                 }
             }
         },
