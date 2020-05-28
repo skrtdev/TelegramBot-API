@@ -25,6 +25,7 @@ In this example, the settings array contains a key `json_payload` set to `true`.
    * [reply](#reply)
    * [sendMessage](#sendMessage)
    * [forwardMessage](#forwardMessage)
+   * [deleteMessage](#deleteMessage)
 
 #### Setup Script
 All the methods explained here are supposed to be in a script with this setup:
@@ -99,3 +100,26 @@ $chat->forwardTo([
     "message_id" => 0123456789
 ]);
 ```
+
+### deleteMessage
+deleteMessage can be used directly as a method of the main class, as a method of a Message Object (just delete that message) or as a metod of a Chat Object, in order to delete a message in that Chat.
+
+```php
+// main class
+$Bot->deleteMessage([
+    "chat_id" => 01234567,
+    "message_id" => 0123456789
+]);
+
+// Message object
+$message->delete(); // just delete
+
+// Chat object
+$chat->deleteMessage([
+    "message_id" => 0123456789
+]);
+
+/* or simply */
+
+// Chat object
+$chat->deleteMessage(0123456789);```

@@ -23,7 +23,7 @@
                 "presets": {
                     "chat_id": "message/chat/id"
                 },
-                "just_one_parameter_needed": "text"
+
             }
         },
         "Message": {
@@ -57,6 +57,13 @@
                 "presets": {
                     "chat_id": "id",
                 }
+            },
+            "deleteMessage": {
+                "alias": "deleteMessage",
+                "presets": {
+                    "chat_id": "id"
+                },
+                "just_one_parameter_needed": "message_id"
             }
         },
         "from": "User",
