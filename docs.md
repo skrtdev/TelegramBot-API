@@ -1,7 +1,7 @@
 # Documentation
 --------
-
-All the BOTApi's methods can be used as methods of the TelegramBot class
+All the BOTApi's methods can be used as methods of the TelegramBot class. There are only this library own methods
+--------
 
 ## Creating the class
 Create a such variable (in this Documentation it's called Bot) and instanciate the TelegramBot Class. Parameters are:
