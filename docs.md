@@ -15,7 +15,7 @@ $Bot = new TelegramBot("YOUR_TOKEN", true, [
     "json_payload" => true
 ]);
 ```
-In this example, the settings array contains a key `json_payload` set to `true`. Doing so, the first API Call made will be print as payload, and suddenly processed by Telegram, making the bot **faster**  
+In this example, the settings array contains a key `json_payload` set to `true`. Doing so, the first API Call made will be print as payload, and afterwards processed by Telegram, making the bot **faster**  
 
 ### Available Methods
    * [reply](#reply)
@@ -23,7 +23,7 @@ In this example, the settings array contains a key `json_payload` set to `true`.
    * [forwardMessage](#forwardMessage)
 
 #### Setup Script
-All the methods explained here suppose to be in a script with this setup:
+All the methods explained here are supposed to be in a script with this setup:
 ```php
 header('Content-Type: application/json');
 require("main.php");
