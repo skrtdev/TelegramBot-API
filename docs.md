@@ -44,7 +44,14 @@ reply acts just like sendMessage, sending a message in the Update chat with the 
 
 ```php
 // Update object
-$update->reply("text"); // just the text of the message
+$update->reply([
+    "text" => "message_text"
+]);
+
+/* or simply */
+
+// Update object
+$update->reply("message_text"); // just the text of the message
 ```
 
 
@@ -62,6 +69,8 @@ $Bot->sendMessage([
 $chat->sendMessage([
     "text" => "message_text"
 ]);
+
+/* or simply */
 
 // Chat object with just text
 $chat->sendMessage("message_text");
