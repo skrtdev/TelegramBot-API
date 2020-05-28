@@ -37,7 +37,7 @@ $chat->sendMessage([
 ```
 
 ### forwardMessage
-sendMessage can be used directly as a method of the main class, as a method of a Message Object (just forwards that message) or as a metod of a Chat Object, (as forwardTo method), in order to forward in that Chat.
+forwardMessage can be used directly as a method of the main class, as a method of a Message Object (just forwards that message) or as a metod of a Chat Object, (as forwardTo method), in order to forward in that Chat.
 
 ```php
 
