@@ -48,7 +48,8 @@
                 "alias": "sendMessage",
                 "presets": {
                     "chat_id": "id"
-                }
+                },
+                "just_one_parameter_needed": "text"
             },
             "forwardTo": {
                 "alias": "forwardMessage",

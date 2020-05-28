@@ -1,7 +1,7 @@
 # Documentation
 
 ## Creating the class
-Create a such variable (in this Documentation is called Bot) and instanciate the TelegramBot Class. Parameters are:
+Create a such variable (in this Documentation it's called Bot) and instanciate the TelegramBot Class. Parameters are:
    * token (string)
    * read_update (boolean)
    * settings (array)
@@ -15,7 +15,7 @@ $Bot = new TelegramBot("YOUR_TOKEN", true, [
     "json_payload" => true
 ]);
 ```
-In this example, the settings array contains a key json_payload set to true. Doing so, the first API Call made will be print as payload, and suddenly processed by Telegram, making the bot faster
+In this example, the settings array contains a key `json_payload` set to `true`. Doing so, the first API Call made will be print as payload, and suddenly processed by Telegram, making the bot **faster**  
 
 ### Available Methods
    * [reply](#reply)
@@ -62,6 +62,9 @@ $Bot->sendMessage([
 $chat->sendMessage([
     "text" => "message_text"
 ]);
+
+// Chat object with just text
+$chat->sendMessage("message_text");
 ```
 
 ### forwardMessage
