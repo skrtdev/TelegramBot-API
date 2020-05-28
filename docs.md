@@ -1,12 +1,12 @@
 # Documentation
 
 
-#### Available Methods
+### Available Methods
 [sendMessage](#sendMessage)
 
 [forwardMessage](#sendMessage)
 
-## sendMessage
+#### sendMessage
 sendMessage can be used directly as a method of the main class, or as a metod of a Chat Object
 
 ```php
