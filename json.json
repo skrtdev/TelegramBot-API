@@ -3,7 +3,12 @@
 		"update": "Update",
 		"message": "Message",
 		"from": "User",
-		"chat": "Chat"
+		"chat": "Chat",
+		"reply_markup": "replyMarkup",
+		"inline_keyboard": "InlineKeyboard",
+		"InlineKeyboard": "[InlineKeyboardRow]",
+		"InlineKeyboardRow": "[InlineKeyboardButton]",
+		"InlineKeyboardButton": "InlineKeyboardButton"
 	},
 	"available_methods_regxs": {
 		"c2VuZFx3Kw==": {

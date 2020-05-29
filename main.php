@@ -19,28 +19,38 @@ class TelegramBot {
         }
         else{
             $this->update = json_decode('{
-                                    "update_id": 143957909,
-                                    "message": {
-                                        "message_id": 210450,
-                                        "from": {
-                                            "id": 634408248,
-                                            "is_bot": false,
-                                            "first_name": "⁣",
-                                            "last_name": "𝓖 Ðᴇᴠ ✓✰",
-                                            "username": "gaetano555",
-                                            "language_code": "it"
-                                        },
-                                        "chat": {
-                                            "id": 634408248,
-                                            "first_name": "⁣",
-                                            "last_name": "𝓖 Ðᴇᴠ ✓✰",
-                                            "username": "gaetano555",
-                                            "type": "private"
-                                        },
-                                        "date": 1590425893,
-                                        "text": "start?"
-                                    }
-                                }', true);
+              "update_id": 143958737,
+              "message": {
+                "message_id": 212136,
+                "from": {
+                  "id": 634408248,
+                  "is_bot": false,
+                  "first_name": "⁣",
+                  "last_name": "𝓖 Ðᴇᴠ ✓✰",
+                  "username": "gaetano555",
+                  "language_code": "it"
+                },
+                "chat": {
+                  "id": 634408248,
+                  "first_name": "⁣",
+                  "last_name": "𝓖 Ðᴇᴠ ✓✰",
+                  "username": "gaetano555",
+                  "type": "private"
+                },
+                "date": 1590771294,
+                "text": "you say a",
+                "reply_markup": {
+                  "inline_keyboard": [
+                    [
+                      {
+                        "text": "you say ",
+                        "url": "http://google.it/"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }', true);
 
             $this->update = $this->JSONToTelegramObject($this->update, "Update");
         }
@@ -97,25 +107,47 @@ class TelegramBot {
     private function JSONToTelegramObject(array $json, string $parameter_name){
         //echo "JSONToTelegramObject $parameter_name\n";
         foreach($json as $key => $value){
-            //echo "$key => $value \n";
-            $valuetype = gettype($value);
+            //echo "$key => $value (", $this->getObjectType($this->getObjectType($key)) ,")\n";
 
-            if($valuetype === "array"){
+            if(gettype($value) === "array"){
                 if($this->getObjectType($key)){
-                    $json[$key] = $this->JSONToTelegramObject($value, $this->getObjectType($key));
+                    if($this->getObjectType($this->getObjectType($key))) $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $this->getObjectType($key));
+                    else $json[$key] = $this->JSONToTelegramObject($value, $this->getObjectType($key));
                 }
             }
         }
 
         return new TelegramObject($parameter_name, $json, $this);
     }
-}
 
-class TelegramObject extends TelegramBot{
+    private function TelegramObjectArrayToTelegramObject(array $json, string $name){
+        if(preg_match('/\[\w+\]/', $this->getObjectType($name)) === 1){
+            preg_match('/\w+/', $this->getObjectType($name), $matches);
+            foreach($json as $key => $value){
+                if(gettype($value) === "array") $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $matches[0]);
+            }
+        }
+        return new TelegramObject($name, $json, $this);
+
+    }
+
+    public function __debugInfo() {
+        $result = get_object_vars($this);
+        unset($result['json']);
+        unset($result['config']);
+        unset($result['TelegramBot']);
+        return $result;
+    }
+}
+//class TelegramObject extends TelegramBot{
+class TelegramObject {
+    private $TelegramBot, $config;
     public function __construct(string $type, array $json, TelegramBot $TelegramBot){
 
         $this->type = $type;
         $this->TelegramBot = $TelegramBot;
+
+        //$json = json_decode(json_encode($json));
 
         foreach ($json as $key => $value) {
             $this->$key = $value;
@@ -148,6 +180,14 @@ class TelegramObject extends TelegramBot{
         $obj = $this;
         foreach(explode("/", $preset) as $key) $obj = $obj->$key;
         return $obj;
+    }
+
+    public function __debugInfo() {
+        $result = get_object_vars($this);
+        unset($result['json']);
+        unset($result['config']);
+        unset($result['TelegramBot']);
+        return $result;
     }
 }
 
