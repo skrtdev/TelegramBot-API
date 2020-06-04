@@ -94,25 +94,21 @@ class TelegramBot {
     private function getMethodReturned(string $method){
         if( isset($this->json['available_methods'][$method]['returns']) ) return $this->json['available_methods'][$method]['returns'];
         foreach ($this->json['available_methods_regxs'] as $key => $value) {
-            //$this->APICall("sendMessage", ["chat_id" => 634408248, "text" => base64_encode($key)]);
             if(preg_match('/'.base64_decode($key).'/', $method) === 1) return $value['returns'];
         }
         return false;
     }
 
-    private function getObjectType(string $parameter_name){
-        return isset($this->json['available_types'][$parameter_name]) ? $this->json['available_types'][$parameter_name] : false;
+    private function getObjectType(string $parameter_name, string $object_name = ""){
+        return isset($this->json['available_types'][$object_name.".".$parameter_name]) ? $this->json['available_types'][$object_name.".".$parameter_name] : false;
     }
 
     private function JSONToTelegramObject(array $json, string $parameter_name){
-        //echo "JSONToTelegramObject $parameter_name\n";
         foreach($json as $key => $value){
-            //echo "$key => $value (", $this->getObjectType($this->getObjectType($key)) ,")\n";
-
             if(gettype($value) === "array"){
-                if($this->getObjectType($key)){
-                    if($this->getObjectType($this->getObjectType($key))) $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $this->getObjectType($key));
-                    else $json[$key] = $this->JSONToTelegramObject($value, $this->getObjectType($key));
+                if($this->getObjectType($key, $parameter_name)){
+                    if($this->getObjectType($this->getObjectType($key, $parameter_name))) $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $this->getObjectType($key, $parameter_name));
+                    else $json[$key] = $this->JSONToTelegramObject($value, $this->getObjectType($key, $parameter_name));
                 }
             }
         }

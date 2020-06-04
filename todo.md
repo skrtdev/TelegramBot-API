@@ -1,25 +1,45 @@
 # // TODO
 
-- [x] send*
-- [ ] Array of MessageEntity type
-- [ ] Animation type
-- [ ] Audio type
-- [ ] Document type
-- [ ] Array of PhotoSize type
-- [ ] Sticker type
-- [ ] Video type
-- [ ] VideoNote type
-- [ ] Voice type
-- [ ] Array of MessageEntity type
-- [ ] Contact type
-- [ ] Dice type
-- [ ] Game type
-- [ ] Poll type
-- [ ] Venue type
-- [ ] Location type
-- [ ] SuccessfulPayment type
-- [ ] String type
-- [ ] PassportData type
-- [ ] InlineKeyboardMarkup type
-
-- [ ] Add all methods
+- [x] Message Object
+- [ ] InlineQuery Object
+- [ ] ChosenInlineResult Object
+- [x] CallbackQuery Object
+- [ ] ShippingQuery Object
+- [ ] PreCheckoutQuery Object
+- [ ] Poll Object
+- [ ] PollAnswer Object
+- [ ] ChatPhoto Object
+- [ ] ChatPermissions Object
+- [x] User Object
+- [x] Chat Object
+- [ ] MessageEntity Object
+- [ ] Animation Object
+- [ ] Audio Object
+- [ ] Document Object
+- [ ] PhotoSize Object
+- [ ] Sticker Object
+- [ ] Video Object
+- [ ] VideoNote Object
+- [ ] Voice Object
+- [ ] Contact Object
+- [ ] Dice Object
+- [ ] Game Object
+- [ ] Venue Object
+- [ ] Location Object
+- [ ] Invoice Object
+- [ ] SuccessfulPayment Object
+- [ ] PassportData Object
+- [ ] InlineKeyboardMarkup Object
+- [ ] PollOption Object
+- [ ] Float Object
+- [ ] KeyboardButton Object
+- [ ] KeyboardButtonPollType Object
+- [x] InlineKeyboardButton Object
+- [ ] LoginUrl Object
+- [ ] CallbackGame Object
+- [ ] InputFile or String Object
+- [ ] MaskPosition Object
+- [ ] InputMessageContent Object
+- [ ] ShippingAddress Object
+- [ ] LabeledPrice Object
+- [ ] OrderInfo Object
