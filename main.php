@@ -4,8 +4,6 @@ class TelegramBot {
     //private $token, $settings, $json;
     private $token, $settings;
 
-
-
     public function __construct(string $token, bool $read_update = true, array $settings = []) {
         $this->token = $token;
         $this->settings = (object) $settings;
@@ -100,15 +98,17 @@ class TelegramBot {
     }
 
     private function getObjectType(string $parameter_name, string $object_name = ""){
-        return isset($this->json['available_types'][$object_name.".".$parameter_name]) ? $this->json['available_types'][$object_name.".".$parameter_name] : false;
+        $object_name = $object_name != "" ? $object_name."." : $object_name;
+        return isset($this->json['available_types'][$object_name.$parameter_name]) ? $this->json['available_types'][$object_name.$parameter_name] : false;
     }
 
     private function JSONToTelegramObject(array $json, string $parameter_name){
         foreach($json as $key => $value){
             if(gettype($value) === "array"){
-                if($this->getObjectType($key, $parameter_name)){
-                    if($this->getObjectType($this->getObjectType($key, $parameter_name))) $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $this->getObjectType($key, $parameter_name));
-                    else $json[$key] = $this->JSONToTelegramObject($value, $this->getObjectType($key, $parameter_name));
+                $ObjectType = $this->getObjectType($key, $parameter_name);
+                if($ObjectType){
+                    if($this->getObjectType($ObjectType)) $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $ObjectType);
+                    else $json[$key] = $this->JSONToTelegramObject($value, $ObjectType);
                 }
             }
         }
@@ -117,12 +117,15 @@ class TelegramBot {
     }
 
     private function TelegramObjectArrayToTelegramObject(array $json, string $name){
-        if(preg_match('/\[\w+\]/', $this->getObjectType($name)) === 1){
-            preg_match('/\w+/', $this->getObjectType($name), $matches);
+        $ObjectType = $this->getObjectType($name);
+
+        if(preg_match('/\[\w+\]/', $ObjectType) === 1){
+            preg_match('/\w+/', $ObjectType, $matches);// matches[0] is the new field type i think
             foreach($json as $key => $value){
                 if(gettype($value) === "array") $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $matches[0]);
             }
         }
+
         return new TelegramObject($name, $json, $this);
 
     }
@@ -135,7 +138,7 @@ class TelegramBot {
         return $result;
     }
 }
-//class TelegramObject extends TelegramBot{
+
 class TelegramObject {
     private $TelegramBot, $config;
     public function __construct(string $type, array $json, TelegramBot $TelegramBot){

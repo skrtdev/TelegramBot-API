@@ -57,7 +57,7 @@
 		"UserProfilePhotos.photos":"[PhotoSize]",
 		"ReplyKeyboardMarkup.keyboard":"[KeyboardButton]",
 		"KeyboardButton.request_poll":"KeyboardButtonPollType",
-		"InlineKeyboardMarkup.inline_keyboard":"[InlineKeyboardRow]",
+		"InlineKeyboardMarkup.inline_keyboard":"InlineKeyboard",
 		"InlineKeyboardButton.login_url":"LoginUrl",
 		"InlineKeyboardButton.callback_game":"CallbackGame",
 		"CallbackQuery.from":"User",
@@ -130,6 +130,8 @@
 		"Game.text_entities":"[MessageEntity]",
 		"Game.animation":"Animation",
 		"GameHighScore.user":"User",
+
+		"InlineKeyboard":"[InlineKeyboardRow]",
 		"InlineKeyboardRow":"[InlineKeyboardButton]"
 	},
 	"available_methods_regxs":{
