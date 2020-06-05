@@ -20,9 +20,7 @@ $Bot = new TelegramBot("YOUR_TOKEN", true, [
     "json_payload" => true
 ]);
 
-$Bot->update->message->forward([
-    "chat_id" => $update->message->chat->id
-]);
+$Bot->update->message->forward($update->message->chat->id);
 ```
 
 Using `"json_payload" => true` will print the first api call as payload, making it faster

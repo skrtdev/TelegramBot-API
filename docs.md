@@ -115,12 +115,5 @@ $Bot->deleteMessage([
 $message->delete(); // just delete
 
 // Chat object
-$chat->deleteMessage([
-    "message_id" => 0123456789
-]);
-
-/* or simply */
-
-// Chat object
 $chat->deleteMessage(0123456789); // just the message_id of the target message
 ```
