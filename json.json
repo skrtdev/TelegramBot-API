@@ -182,6 +182,18 @@
 					"message_id":"message_id"
 				},
 				"no_more_parameters_needed":true
+			},
+			"editText":{
+				"alias":"editMessageText",
+				"presets":{
+					"chat_id":"chat/id",
+					"message_id":"message_id",
+					"text":"text",
+
+					"parse_mode": "parse_mode"
+				},
+				"(ADD)reply_markup": "reply_markup",
+				"just_one_parameter_needed":"text"
 			}
 		},
 		"Chat":{
@@ -206,7 +218,27 @@
 				"just_one_parameter_needed":"message_id"
 			}
 		},
-		"from":"User",
+		"CallbackQuery":{
+			"answer":{
+				"alias":"answerCallbackQuery",
+				"presets":{
+					"callback_query_id":"id"
+				},
+				"defaults": {
+					"show_alert": false,
+					"text": ""
+				},
+				"just_one_parameter_needed":"chat_id"
+			},
+			"delete":{
+				"alias":"deleteMessage",
+				"presets":{
+					"chat_id":"chat/id",
+					"message_id":"message_id"
+				},
+				"no_more_parameters_needed":true
+			}
+		},
 		"chat":"Chat"
 	}
 }

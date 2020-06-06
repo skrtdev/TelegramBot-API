@@ -1,6 +1,7 @@
 # // TODO
 
 - [x] Message Object
+- [ ] Messages longer than 4096 characters have to be split up into multiple messages
 - [ ] InlineQuery Object
 - [ ] ChosenInlineResult Object
 - [x] CallbackQuery Object

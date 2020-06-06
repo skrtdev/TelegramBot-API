@@ -26,6 +26,8 @@ In this example, the settings array contains a key `json_payload` set to `true`.
    * [sendMessage](#sendMessage)
    * [forwardMessage](#forwardMessage)
    * [deleteMessage](#deleteMessage)
+   * [answerCallbackQuery](#answerCallbackQuery)
+   * [editMessageText](#editMessageText)
 
 #### Setup Script
 All the methods explained here are supposed to be in a script with this setup:
@@ -101,19 +103,24 @@ $chat->forwardTo([
 ]);
 ```
 
-### deleteMessage
-deleteMessage can be used directly as a method of the main class, as a method of a Message Object (just delete that message) or as a metod of a Chat Object, in order to delete a message in that Chat.
+### answerCallbackQuery
+answerCallbackQuery (alias answer) can be used as a method of a CallbackQuery Object.
 
 ```php
-// main class
-$Bot->deleteMessage([
-    "chat_id" => 01234567,
-    "message_id" => 0123456789
-]);
+$CallbackQuery = $update->callback_query;
 
+// CallbackQuery object
+$CallbackQuery->answer(); // just answer, but you can obviously add the other parameters
+```
+
+### editMessageText
+editMessageText (alias editText) can be used  as a method of a Message Object.
+
+```php
 // Message object
-$message->delete(); // just delete
-
-// Chat object
-$chat->deleteMessage(0123456789); // just the message_id of the target message
+$message->editText("new text"); // just text
+$message->editText([
+    "text" => "<b>new text</b>",
+    "parse_mode" => "html"
+]); // just text
 ```
