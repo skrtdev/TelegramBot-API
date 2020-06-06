@@ -21,6 +21,15 @@ $Bot = new TelegramBot("YOUR_TOKEN", true, [
 ```
 In this example, the settings array contains a key `json_payload` set to `true`. Doing so, the first API Call made will be print as payload, and afterwards processed by Telegram, making the bot **faster**  
 
+## All Methods
+How to use any BOTApi Method:
+```php
+$Bot->METHOD_NAME([
+    "field1_name" => "field1_value",
+    "field2_name" => "field2_value"
+])
+```
+
 ### Available Methods
    * [reply](#reply)
    * [sendMessage](#sendMessage)
@@ -104,13 +113,25 @@ $chat->forwardTo([
 ```
 
 ### answerCallbackQuery
-answerCallbackQuery (alias answer) can be used as a method of a CallbackQuery Object.
+answerCallbackQuery can be used directly as a method of the main class or as a metod of a CallbackQuery Object, (as answer method), in order to answer that CallbackQuery.
 
 ```php
 $CallbackQuery = $update->callback_query;
 
+// main class
+$Bot->answerCallbackQuery([
+    "callback_query_id" => 012345678901234567,
+    "text" => "some text"
+]);
+
 // CallbackQuery object
-$CallbackQuery->answer(); // just answer, but you can obviously add the other parameters
+$CallbackQuery->answer(); // just answer
+$CallbackQuery->answer("text"); // just text
+
+$CallbackQuery->answer([
+    "text" => "some text",
+    "show_alert" => true
+]);
 ```
 
 ### editMessageText
