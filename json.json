@@ -146,14 +146,35 @@
 		"forwardMessage":{
 			"returns":"Message"
 		},
-		"sendLocation":{
-			"returns":"Message"
-		},
 		"editMessageLiveLocation":{
 			"returns":"Message"
 		},
 		"stopMessageLiveLocation":{
 			"returns":"Message"
+		},
+		"getUserProfilePhotos":{
+			"returns":"UserProfilePhotos"
+		},
+		"getFile":{
+			"returns":"File"
+		},
+		"getChat":{
+			"returns":"Chat"
+		},
+		"getChatAdministrators":{
+			"returns":"Chat"
+		},
+		"getChatMember":{
+			"returns":"ChatMember"
+		},
+		"getStickerSet":{
+			"returns":"StickerSet"
+		},
+		"setGameScore":{
+			"returns":"Message"
+		},
+		"sendChatAction":{
+			"returns":"_"
 		}
 	},
 	"types_methods":{
@@ -167,19 +188,20 @@
 			}
 		},
 		"Message":{
+			"_presets":{
+				"message_id": "message_id"
+			},
 			"forward":{
 				"alias":"forwardMessage",
 				"presets":{
-					"from_chat_id":"chat/id",
-					"message_id":"message_id"
+					"from_chat_id":"chat/id"
 				},
 				"just_one_parameter_needed":"chat_id"
 			},
 			"delete":{
 				"alias":"deleteMessage",
 				"presets":{
-					"chat_id":"chat/id",
-					"message_id":"message_id"
+					"chat_id":"chat/id"
 				},
 				"no_more_parameters_needed":true
 			},
@@ -187,55 +209,59 @@
 				"alias":"editMessageText",
 				"presets":{
 					"chat_id":"chat/id",
-					"message_id":"message_id",
-					"text":"text",
-
-					"parse_mode": "parse_mode"
+					"text":"text"
 				},
+				"(ADD)parse_mode": "parse_mode",
 				"(ADD)reply_markup": "reply_markup",
 				"just_one_parameter_needed":"text"
 			}
 		},
 		"Chat":{
+			"_presets":{
+				"chat_id":"id"
+			},
 			"sendMessage":{
 				"alias":"sendMessage",
 				"presets":{
-					"chat_id":"id"
+
 				},
 				"just_one_parameter_needed":"text"
 			},
 			"forwardTo":{
 				"alias":"forwardMessage",
 				"presets":{
-					"chat_id":"id"
+
 				}
 			},
 			"deleteMessage":{
 				"alias":"deleteMessage",
 				"presets":{
-					"chat_id":"id"
+
 				},
 				"just_one_parameter_needed":"message_id"
+			},
+			"sendAction":{
+				"alias":"sendChatAction",
+				"presets":{
+
+				},
+				"just_one_parameter_needed":"action"
 			}
 		},
 		"CallbackQuery":{
+			"_presets":{
+				"callback_query_id":"id"
+			},
 			"answer":{
 				"alias":"answerCallbackQuery",
 				"presets":{
-					"callback_query_id":"id"
+
 				},
 				"defaults": {
 					"show_alert": false,
 					"text": ""
 				},
-				"just_one_parameter_needed":"chat_id"
-			},
-			"delete":{
-				"alias":"deleteMessage",
-				"presets":{
-					"chat_id":"chat/id",
-					"message_id":"message_id"
-				},
+				"just_one_parameter_needed":"text",
 				"no_more_parameters_needed":true
 			}
 		},

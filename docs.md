@@ -135,13 +135,21 @@ $CallbackQuery->answer([
 ```
 
 ### editMessageText
-editMessageText (alias editText) can be used  as a method of a Message Object.
+editMessageText can be used directly as a method of the main class or as a metod of a Message Object, (as editText method), in order to edit that Message.
 
 ```php
+// main class
+$Bot->editMessageText([
+    "chat_id" => 01234567,
+    "message_id" => 0123456789,
+    "text" => "new text"
+]);
+
 // Message object
 $message->editText("new text"); // just text
+
 $message->editText([
     "text" => "<b>new text</b>",
     "parse_mode" => "html"
-]); // just text
+]);
 ```

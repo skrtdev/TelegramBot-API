@@ -1,0 +1,7 @@
+{
+    "name": "skrtdev/TelegramBot-API",
+    "description": "Framework",
+    "require": {
+        "php": "^7.0",
+    }
+}
