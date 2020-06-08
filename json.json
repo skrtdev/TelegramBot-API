@@ -54,7 +54,7 @@
 		"Poll.options":"[PollOption]",
 		"Poll.explanation_entities":"[MessageEntity]",
 		"Venue.location":"Location",
-		"UserProfilePhotos.photos":"[PhotoSize]",
+		"UserProfilePhotos.photos":"ProfilePhotos",
 		"ReplyKeyboardMarkup.keyboard":"[KeyboardButton]",
 		"KeyboardButton.request_poll":"KeyboardButtonPollType",
 		"InlineKeyboardMarkup.inline_keyboard":"InlineKeyboard",
@@ -131,6 +131,9 @@
 		"Game.animation":"Animation",
 		"GameHighScore.user":"User",
 
+
+		"ProfilePhotos":"[ProfilePhoto]",
+		"ProfilePhoto":"[PhotoSize]",
 		"InlineKeyboard":"[InlineKeyboardRow]",
 		"InlineKeyboardRow":"[InlineKeyboardButton]"
 	},
@@ -216,6 +219,15 @@
 				"just_one_parameter_needed":"text"
 			}
 		},
+		"Document":{
+			"_presets":{
+				"file_id":"file_id"
+			},
+			"get":{
+				"alias":"getFile",
+				"no_more_parameters_needed":true
+			}
+		},
 		"Chat":{
 			"_presets":{
 				"chat_id":"id"
@@ -246,6 +258,19 @@
 
 				},
 				"just_one_parameter_needed":"action"
+			}
+		},
+		"User":{
+			"_presets":{
+				"user_id":"id"
+			},
+			"getProfilePhotos":{
+				"alias":"getUserProfilePhotos",
+				"presets":{
+
+				},
+				"just_one_parameter_needed":"limit",
+				"no_more_parameters_needed":true
 			}
 		},
 		"CallbackQuery":{

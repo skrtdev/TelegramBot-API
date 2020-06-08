@@ -5,7 +5,7 @@
 --------
 
 ## Creating the class
-Create a such variable (in this Documentation it's called Bot) and instanciate the TelegramBot Class. Parameters are:
+Create a variable (in this Documentation it's called $Bot) and instanciate the TelegramBot Class. Parameters are:
    * token (string)
    * read_update (boolean)
    * settings (array)
@@ -19,7 +19,23 @@ $Bot = new TelegramBot("YOUR_TOKEN", true, [
     "json_payload" => true
 ]);
 ```
-In this example, the settings array contains a key `json_payload` set to `true`. Doing so, the first API Call made will be print as payload, and afterwards processed by Telegram, making the bot **faster**  
+In this example, the settings array contains a key `json_payload` set to `true`. Doing so, the first API Call with 2nd parameter set to true will be print as payload, and afterwards processed by Telegram, making the bot **faster**  
+
+#### Setup Script
+All the methods explained here are supposed to be in a script with this setup:
+```php
+header('Content-Type: application/json');
+require("main.php");
+
+$Bot = new TelegramBot("YOUR_TOKEN", true, [
+   "json_payload" => true
+]);
+
+$update = $Bot->update;
+$message = $update->message;
+$chat = $message->chat;
+$user = $message->from;
+```
 
 ## All Methods
 How to use any BOTApi Method:
@@ -37,22 +53,9 @@ $Bot->METHOD_NAME([
    * [deleteMessage](#deleteMessage)
    * [answerCallbackQuery](#answerCallbackQuery)
    * [editMessageText](#editMessageText)
+   * [sendChatAction](#sendChatAction)
+   * [getUserProfilePhotos](#getUserProfilePhotos)
 
-#### Setup Script
-All the methods explained here are supposed to be in a script with this setup:
-```php
-header('Content-Type: application/json');
-require("main.php");
-
-$Bot = new TelegramBot("YOUR_TOKEN", true, [
-   "json_payload" => true
-]);
-
-$update = $Bot->update;
-$message = $update->message;
-$chat = $message->chat;
-$from = $message->from;
-```
 
 ### reply
 reply can be used only as a method of an Update Object.
@@ -72,7 +75,7 @@ $update->reply("message_text"); // just the text of the message
 
 
 ### sendMessage
-sendMessage can be used directly as a method of the main class, or as a metod of a Chat Object.
+sendMessage can be used directly as a method of the main class, or as a method of a Chat Object.
 
 ```php
 // main class
@@ -93,7 +96,7 @@ $chat->sendMessage("message_text");
 ```
 
 ### forwardMessage
-forwardMessage can be used directly as a method of the main class, as a method of a Message Object (just forwards that message) or as a metod of a Chat Object, (as forwardTo method), in order to forward in that Chat.
+forwardMessage can be used directly as a method of the main class, as a method of a Message Object (just forwards that message) or as a method of a Chat Object, (as forwardTo method), in order to forward in that Chat.
 
 ```php
 // main class
@@ -113,7 +116,7 @@ $chat->forwardTo([
 ```
 
 ### answerCallbackQuery
-answerCallbackQuery can be used directly as a method of the main class or as a metod of a CallbackQuery Object, (as answer method), in order to answer that CallbackQuery.
+answerCallbackQuery can be used directly as a method of the main class or as a method of a CallbackQuery Object, (as answer method), in order to answer that CallbackQuery.
 
 ```php
 $CallbackQuery = $update->callback_query;
@@ -135,7 +138,7 @@ $CallbackQuery->answer([
 ```
 
 ### editMessageText
-editMessageText can be used directly as a method of the main class or as a metod of a Message Object, (as editText method), in order to edit that Message.
+editMessageText can be used directly as a method of the main class or as a method of a Message Object, (as editText method), in order to edit that Message.
 
 ```php
 // main class
@@ -151,5 +154,38 @@ $message->editText("new text"); // just text
 $message->editText([
     "text" => "<b>new text</b>",
     "parse_mode" => "html"
+]);
+```
+
+### sendChatAction
+sendChatAction can be used directly as a method of the main class or as a method of a Chat Object, (as sendAction method), in order to send an Action that Chat.
+
+```php
+// main class
+$Bot->sendChatAction([
+    "chat_id" => 01234567,
+    "action" => "typing"
+]);
+
+// Chat object
+$chat->sendAction("typing"); // just action
+```
+
+### getUserProfilePhotos
+getUserProfilePhotos can be used directly as a method of the main class or as a method of a Chat Object, (as getProfilePhotos method),, in order to get Profile Photos of that User.
+
+```php
+// main class
+$Bot->getUserProfilePhotos([
+    "user_id" => 01234567,
+    "limit" => 10
+]);
+
+// User object
+$user->getProfilePhotos(10); // just limit
+
+$user->getProfilePhotos([
+    "limit" => 10,
+    "offset" => 5
 ]);
 ```

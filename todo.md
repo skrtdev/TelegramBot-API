@@ -32,7 +32,6 @@
 - [ ] PassportData Object
 - [ ] InlineKeyboardMarkup Object
 - [ ] PollOption Object
-- [ ] Float Object
 - [ ] KeyboardButton Object
 - [ ] KeyboardButtonPollType Object
 - [x] InlineKeyboardButton Object

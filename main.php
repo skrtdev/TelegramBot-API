@@ -2,9 +2,12 @@
 
 class TelegramBot {
     private $token, $settings, $json;
+    private $payloaded = false;
+    public $file;
 
     public function __construct(string $token, bool $read_update = true, array $settings = []) {
         $this->token = $token;
+        $this->file = "https://api.telegram.org/file/bot$token/";
         $this->settings = (object) $settings;
 
         $this->json = json_decode(implode(file("json.json")), true);
@@ -20,9 +23,9 @@ class TelegramBot {
         }
         else{
             $this->raw_update = json_decode('{
-    "update_id": 789389323,
+    "update_id": 789390454,
     "message": {
-        "message_id": 25222,
+        "message_id": 27131,
         "from": {
             "id": 634408248,
             "is_bot": false,
@@ -38,37 +41,13 @@ class TelegramBot {
             "username": "gaetano555",
             "type": "private"
         },
-        "date": 1591529063,
-        "animation": {
-            "file_name": "video.mp4",
-            "mime_type": "video\/mp4",
-            "duration": 10,
-            "width": 352,
-            "height": 640,
-            "thumb": {
-                "file_id": "AAMCBAADGQEAAmKGXtzOZ-CNOtW99ngmjKmpaNErRFMAAgUHAALjGeBTkuaDUCFiVqknHW4iXQADAQAHbQAD_A0AAhoE",
-                "file_unique_id": "AQADJx1uIl0AA_wNAAI",
-                "file_size": 5603,
-                "width": 176,
-                "height": 320
-            },
-            "file_id": "CgACAgQAAxkBAAJihl7czmfgjTrVvfZ4JoypqWjRK0RTAAIFBwAC4xngU5Lmg1AhYlapGgQ",
-            "file_unique_id": "AgADBQcAAuMZ4FM",
-            "file_size": 929519
-        },
+        "date": 1591640518,
         "document": {
-            "file_name": "video.mp4",
-            "mime_type": "video\/mp4",
-            "thumb": {
-                "file_id": "AAMCBAADGQEAAmKGXtzOZ-CNOtW99ngmjKmpaNErRFMAAgUHAALjGeBTkuaDUCFiVqknHW4iXQADAQAHbQAD_A0AAhoE",
-                "file_unique_id": "AQADJx1uIl0AA_wNAAI",
-                "file_size": 5603,
-                "width": 176,
-                "height": 320
-            },
-            "file_id": "CgACAgQAAxkBAAJihl7czmfgjTrVvfZ4JoypqWjRK0RTAAIFBwAC4xngU5Lmg1AhYlapGgQ",
-            "file_unique_id": "AgADBQcAAuMZ4FM",
-            "file_size": 929519
+            "file_name": "edmodo.py",
+            "mime_type": "text\/x-script.phyton",
+            "file_id": "BQACAgQAAxkBAAJp-17egcb62zn_Hjw6MwxoJnqjVHXPAAL3BwACuYrxUvmHW90If01tGgQ",
+            "file_unique_id": "AgAD9wcAArmK8VI",
+            "file_size": 163
         }
     }
 }', true);
@@ -77,7 +56,6 @@ class TelegramBot {
         }
     }
 
-    private $payloaded = false;
 
     public function __call(string $name, array $arguments){
         return $this->APICall($name, $arguments[0], isset($arguments[1]) ? true : false);
@@ -114,7 +92,7 @@ class TelegramBot {
     }
 
     private function getMethodReturned(string $method){
-        if( isset($this->json['available_methods'][$method]['returns']) ) return $this->json['available_methods'][$method]['returns'] !== "_" ? $this->json['available_methods'][$method]['returns'] : false;
+        if(isset($this->json['available_methods'][$method]['returns']) ) return $this->json['available_methods'][$method]['returns'] !== "_" ? $this->json['available_methods'][$method]['returns'] : false;
         foreach ($this->json['available_methods_regxs'] as $key => $value) {
             if(preg_match('/'.base64_decode($key).'/', $method) === 1) return $value['returns'];
         }
@@ -122,9 +100,7 @@ class TelegramBot {
     }
 
     private function getObjectType(string $parameter_name, string $object_name = ""){
-        //$object_name = $object_name != "" ? $object_name."." : $object_name;
         if($object_name != "") $object_name .= ".";
-
         return isset($this->json['available_types'][$object_name.$parameter_name]) ? $this->json['available_types'][$object_name.$parameter_name] : false;
     }
 
@@ -144,21 +120,32 @@ class TelegramBot {
 
     private function TelegramObjectArrayToTelegramObject(array $json, string $name){
         $ObjectType = $this->getObjectType($name);
+        $parent_name = $name;
 
         if(preg_match('/\[\w+\]/', $ObjectType) === 1){
             preg_match('/\w+/', $ObjectType, $matches);// extract to matches[0] the type of elements
-            foreach($json as $key => $value){
-                if(gettype($value) === "array") $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $matches[0]);
+            $childs_name = $matches[0];
+        }
+        else $childs_name = $ObjectType;
+
+        foreach($json as $key => $value){
+            if(gettype($value) === "array"){
+
+                if(gettype($key) === "integer"){
+                    if($this->getObjectType($childs_name)) $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $childs_name);
+                    else $json[$key] = new TelegramObject($childs_name, $value, $this);
+                }
+                else $json[$key] = $this->JSONToTelegramObject($value, $this->getObjectType($childs_name, $parent_name));
+
             }
         }
-
         return new TelegramObject($name, $json, $this);
 
     }
 
     public function __debugInfo() {
         $result = get_object_vars($this);
-        foreach(['json', 'config', 'TelegramBot', 'settings', 'payloaded'] as $key) unset($result[$key]);
+        foreach(['json', 'config', 'TelegramBot', 'settings', 'payloaded', 'raw_update'] as $key) unset($result[$key]);
         return $result;
     }
 }
@@ -172,7 +159,10 @@ class TelegramObject {
 
         //$json = json_decode(json_encode($json));
 
-        foreach ($json as $key => $value) $this->$key = $value;
+        foreach ($json as $key => $value){
+            if($key === "file_path") $value = $TelegramBot->file.$value;
+            $this->$key = $value;
+        }
 
         $this->config = json_decode(implode(file("json.json")));
     }
@@ -195,9 +185,10 @@ class TelegramObject {
         }
         else{
             if($this_method->just_one_parameter_needed !== null) $data[$this_method->just_one_parameter_needed] = $arguments[0];
-            elseif($this_method->no_more_parameters_needed === null) throw new Exception("TelegramObject({$this->_})::$name called without parameters." );
+            //elseif($this_method->no_more_parameters_needed === null) throw new Exception("TelegramObject({$this->_})::$name called without parameters." );
 
         }
+        if(count($data) === 0) throw new Exception("TelegramObject({$this->_})::$name called without parameters." );
 
         return $this->TelegramBot->APICall($this_method->alias, $data, isset($arguments[1]) ? true : false);
     }
