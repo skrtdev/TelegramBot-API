@@ -96,7 +96,7 @@ $chat->sendMessage("message_text");
 ```
 
 ### forwardMessage
-forwardMessage can be used directly as a method of the main class, as a method of a Message Object (just forwards that message) or as a method of a Chat Object, (as forwardTo method), in order to forward in that Chat.
+forwardMessage can be used directly as a method of the main class, as a method of a Message Object (just forwards that message) or as a method of a Chat Object, as _forwardTo_ method, in order to forward in that Chat.
 
 ```php
 // main class
@@ -116,7 +116,7 @@ $chat->forwardTo([
 ```
 
 ### answerCallbackQuery
-answerCallbackQuery can be used directly as a method of the main class or as a method of a CallbackQuery Object, (as answer method), in order to answer that CallbackQuery.
+answerCallbackQuery can be used directly as a method of the main class or as a method of a CallbackQuery Object, as _answer_ method, in order to answer that CallbackQuery.
 
 ```php
 $CallbackQuery = $update->callback_query;
@@ -138,7 +138,7 @@ $CallbackQuery->answer([
 ```
 
 ### editMessageText
-editMessageText can be used directly as a method of the main class or as a method of a Message Object, (as editText method), in order to edit that Message.
+editMessageText can be used directly as a method of the main class or as a method of a Message Object, as _editText_ method, in order to edit that Message.
 
 ```php
 // main class
@@ -158,7 +158,7 @@ $message->editText([
 ```
 
 ### sendChatAction
-sendChatAction can be used directly as a method of the main class or as a method of a Chat Object, (as sendAction method), in order to send an Action that Chat.
+sendChatAction can be used directly as a method of the main class or as a method of a Chat Object, as _sendAction_ method, in order to send an Action that Chat.
 
 ```php
 // main class
@@ -172,7 +172,7 @@ $chat->sendAction("typing"); // just action
 ```
 
 ### getUserProfilePhotos
-getUserProfilePhotos can be used directly as a method of the main class or as a method of a Chat Object, (as getProfilePhotos method),, in order to get Profile Photos of that User.
+getUserProfilePhotos can be used directly as a method of the main class or as a method of a Chat Object, as _getProfilePhotos_ method, in order to get Profile Photos of that User.
 
 ```php
 // main class
