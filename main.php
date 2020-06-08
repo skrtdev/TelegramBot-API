@@ -122,7 +122,9 @@ class TelegramBot {
     }
 
     private function getObjectType(string $parameter_name, string $object_name = ""){
-        $object_name = $object_name != "" ? $object_name."." : $object_name;
+        //$object_name = $object_name != "" ? $object_name."." : $object_name;
+        if($object_name != "") $object_name .= ".";
+
         return isset($this->json['available_types'][$object_name.$parameter_name]) ? $this->json['available_types'][$object_name.$parameter_name] : false;
     }
 
