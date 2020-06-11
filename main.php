@@ -10,7 +10,7 @@ class TelegramBot {
         $this->file = "https://api.telegram.org/file/bot$token/";
         $this->settings = (object) $settings;
 
-        $this->json = json_decode(implode(file(dirname(__FILE__)."json.json")), true);
+        $this->json = json_decode(implode(file(dirname(__FILE__)."/json.json")), true);
 
         if($read_update){
             $this->raw_update = json_decode(file_get_contents("php://input"), true);
@@ -161,7 +161,7 @@ class TelegramObject {
             $this->$key = $value;
         }
 
-        $this->config = json_decode(implode(file(dirname(__FILE__)."json.json")));
+        $this->config = json_decode(implode(file(dirname(__FILE__)."/json.json")));
     }
     public function __call(string $name, array $arguments){
         $this_obj = $this->config->types_methods->{$this->_};
