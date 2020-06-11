@@ -10,13 +10,13 @@ class TelegramBot {
         $this->file = "https://api.telegram.org/file/bot$token/";
         $this->settings = (object) $settings;
 
-        $this->json = json_decode(implode(file("json.json")), true);
+        $this->json = json_decode(implode(file(dirname(__FILE__)."json.json")), true);
 
         if($read_update){
             $this->raw_update = json_decode(file_get_contents("php://input"), true);
 
             if($this->settings->log_updates){
-                $this->APICall("sendMessage", ["chat_id" => 634408248, "text" => json_encode(json_decode(file_get_contents("php://input"), true), JSON_PRETTY_PRINT)]);
+                $this->APICall("sendMessage", ["chat_id" => 634408248, "text" => json_encode($this->raw_update, JSON_PRETTY_PRINT)]);
             }
 
             $this->update = $this->JSONToTelegramObject( $this->raw_update, "Update");
@@ -70,8 +70,6 @@ class TelegramBot {
             return true;
         }
 
-        if(!isset($this->json)) $this->json = json_decode(implode(file("json.json")), true);
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->token.'/'.$method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -114,13 +112,12 @@ class TelegramBot {
                 }
             }
         }
-
         return new TelegramObject($parameter_name, $json, $this);
     }
 
     private function TelegramObjectArrayToTelegramObject(array $json, string $name){
-        $ObjectType = $this->getObjectType($name);
         $parent_name = $name;
+        $ObjectType = $this->getObjectType($name);
 
         if(preg_match('/\[\w+\]/', $ObjectType) === 1){
             preg_match('/\w+/', $ObjectType, $matches);// extract to matches[0] the type of elements
@@ -164,7 +161,7 @@ class TelegramObject {
             $this->$key = $value;
         }
 
-        $this->config = json_decode(implode(file("json.json")));
+        $this->config = json_decode(implode(file(dirname(__FILE__)."json.json")));
     }
     public function __call(string $name, array $arguments){
         $this_obj = $this->config->types_methods->{$this->_};
@@ -179,7 +176,7 @@ class TelegramObject {
         if(isset($presets)) foreach ($presets as $key => $value) {
             $data[$key] = $this->presetToValue($value);
         }
-        else trigger_error("no presets");
+        //else trigger_error("no presets");
         if(gettype($arguments[0]) === "array") foreach ($arguments[0] as $key => $value) {
             $data[$key] = $value;
         }
