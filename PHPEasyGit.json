@@ -1,6 +1,8 @@
 {
     "autoload":[
-        "main.php",
+        "main.php"
+    ],
+    "import":[
         "json.json"
     ]
 }
