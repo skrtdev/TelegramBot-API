@@ -7,7 +7,6 @@
 ## Creating the class
 Create a variable (in this Documentation it's called $Bot) and instanciate the TelegramBot Class. Parameters are:
    * token (string)
-   * read_update (boolean)
    * settings (array)
 
 A simple example:
@@ -15,7 +14,7 @@ A simple example:
 header('Content-Type: application/json');
 require("main.php");
 
-$Bot = new TelegramBot("YOUR_TOKEN", true, [
+$Bot = new TelegramBot("YOUR_TOKEN", [
     "json_payload" => true
 ]);
 ```
@@ -113,6 +112,23 @@ $chat->forwardTo([
     "from_chat_id" => 01234567,
     "message_id" => 0123456789
 ]);
+```
+
+### deleteMessage
+deleteMessage can be used directly as a method of the main class, as a method of a Message Object (just delete that message) or as a metod of a Chat Object, in order to delete a message in that Chat.
+
+```php
+// main class
+$Bot->deleteMessage([
+    "chat_id" => 01234567,
+    "message_id" => 0123456789
+]);
+
+// Chat object
+$chat->deleteMessage(0123456789); // just the message_id of the target message
+
+// Message object
+$message->delete(); // just delete
 ```
 
 ### answerCallbackQuery

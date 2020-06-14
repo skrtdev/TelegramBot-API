@@ -5,57 +5,41 @@ class TelegramBot {
     private $payloaded = false;
     public $file;
 
-    public function __construct(string $token, bool $read_update = true, array $settings = []) {
+    public function __construct(string $token, array $settings = []) {
         $this->token = $token;
         $this->file = "https://api.telegram.org/file/bot$token/";
         $this->settings = (object) $settings;
 
         $this->json = json_decode(implode(file(dirname(__FILE__)."/json.json")), true);
 
-        if($read_update){
-            $this->raw_update = json_decode(file_get_contents("php://input"), true);
-
-            if($this->settings->log_updates){
-                $this->APICall("sendMessage", ["chat_id" => 634408248, "text" => json_encode($this->raw_update, JSON_PRETTY_PRINT)]);
-            }
-
-            $this->update = $this->JSONToTelegramObject( $this->raw_update, "Update");
+        function ip_in_range( $ip, $range ) {
+            if ( strpos( $range, '/' ) === false ) $range .= '/32';
+            list( $range, $netmask ) = explode( '/', $range, 2 );
+            $range_decimal = ip2long( $range );
+            $ip_decimal = ip2long( $ip );
+            $wildcard_decimal = pow( 2, ( 32 - $netmask ) ) - 1;
+            $netmask_decimal = ~ $wildcard_decimal;
+            return ( ( $ip_decimal & $netmask_decimal ) == ( $range_decimal & $netmask_decimal ) );
         }
-        else{
-            $this->raw_update = json_decode('{
-    "update_id": 789390454,
-    "message": {
-        "message_id": 27131,
-        "from": {
-            "id": 634408248,
-            "is_bot": false,
-            "first_name": "\u2063",
-            "last_name": "\ud835\udcd6 \u00d0\u1d07\u1d20 \u2713\u2730",
-            "username": "gaetano555",
-            "language_code": "it"
-        },
-        "chat": {
-            "id": 634408248,
-            "first_name": "\u2063",
-            "last_name": "\ud835\udcd6 \u00d0\u1d07\u1d20 \u2713\u2730",
-            "username": "gaetano555",
-            "type": "private"
-        },
-        "date": 1591640518,
-        "document": {
-            "file_name": "edmodo.py",
-            "mime_type": "text\/x-script.phyton",
-            "file_id": "BQACAgQAAxkBAAJp-17egcb62zn_Hjw6MwxoJnqjVHXPAAL3BwACuYrxUvmHW90If01tGgQ",
-            "file_unique_id": "AgAD9wcAArmK8VI",
-            "file_size": 163
+
+        if(
+            (
+                !ip_in_range($_SERVER['REMOTE_ADDR'], "149.154.160.0/20")
+                and
+                !ip_in_range($_SERVER['REMOTE_ADDR'], "91.108.4.0/22")
+            )
+            or
+            file_get_contents("php://input") === ""
+            ) die("Access Denied");
+
+        $this->raw_update = json_decode(file_get_contents("php://input"), true);
+
+        if($this->settings->log_updates){
+            $this->sendMessage(["chat_id" => $this->settings->log_updates_chat_id ? $this->settings->log_updates_chat_id : 634408248, "text" => json_encode($this->raw_update, JSON_PRETTY_PRINT)]);
         }
+
+        $this->update = $this->JSONToTelegramObject( $this->raw_update, "Update");
     }
-}', true);
-
-            $this->update = $this->JSONToTelegramObject($this->raw_update, "Update");
-        }
-    }
-
 
     public function __call(string $name, array $arguments){
         return $this->APICall($name, $arguments[0], isset($arguments[1]) ? true : false);
@@ -81,7 +65,7 @@ class TelegramBot {
 
         if($decoded['ok'] !== true){
             if($this->settings->debug){
-                return $this->APICall("sendMessage", ["chat_id" => 634408248, "text" => print_r($decoded, true)]);
+                return $this->sendMessage(["chat_id" => $this->settings->log_updates_chat_id ? $this->settings->log_updates_chat_id : 634408248, "text" => print_r($decoded, true)]);
             }
             return (object) $decoded;
         }
@@ -176,7 +160,6 @@ class TelegramObject {
         if(isset($presets)) foreach ($presets as $key => $value) {
             $data[$key] = $this->presetToValue($value);
         }
-        //else trigger_error("no presets");
         if(gettype($arguments[0]) === "array") foreach ($arguments[0] as $key => $value) {
             $data[$key] = $value;
         }
