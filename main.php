@@ -21,16 +21,19 @@ class TelegramBot {
             $netmask_decimal = ~ $wildcard_decimal;
             return ( ( $ip_decimal & $netmask_decimal ) == ( $range_decimal & $netmask_decimal ) );
         }
-
+        function isCloudFlare() {
+            $cf_ips = ['173.245.48.0/20','103.21.244.0/22','103.22.200.0/22','103.31.4.0/22','141.101.64.0/18','108.162.192.0/18','190.93.240.0/20','188.114.96.0/20','197.234.240.0/22','198.41.128.0/17','162.158.0.0/15','104.16.0.0/12','172.64.0.0/13','131.0.72.0/22'];
+            foreach ($cf_ips as $cf_ip) if (ip_in_range($_SERVER['REMOTE_ADDR'], $cf_ip)) return true;
+            return false;
+        }
+        if(isset($_SERVER["HTTP_CF_CONNECTING_IP"]) and isCloudFlare()){
+            $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        }
         if(
-            (
-                !ip_in_range($_SERVER['REMOTE_ADDR'], "149.154.160.0/20")
-                and
-                !ip_in_range($_SERVER['REMOTE_ADDR'], "91.108.4.0/22")
-            )
-            or
-            file_get_contents("php://input") === ""
-            ) die("Access Denied");
+            (!ip_in_range($_SERVER['REMOTE_ADDR'], "149.154.160.0/20")
+            and
+            !ip_in_range($_SERVER['REMOTE_ADDR'], "91.108.4.0/22"))
+            or file_get_contents("php://input") === "") die("Access Denied");
 
         $this->raw_update = json_decode(file_get_contents("php://input"), true);
 

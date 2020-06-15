@@ -26,7 +26,7 @@ All the methods explained here are supposed to be in a script with this setup:
 header('Content-Type: application/json');
 require("main.php");
 
-$Bot = new TelegramBot("YOUR_TOKEN", true, [
+$Bot = new TelegramBot("YOUR_TOKEN", [
    "json_payload" => true
 ]);
 

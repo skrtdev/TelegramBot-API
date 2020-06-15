@@ -3,7 +3,7 @@ An elegant, Object-Oriented, reliable PHP Telegram Bot Interface
 
 ## Deal with it
 In order to start using ---it---, you just need to create the class
-```
+```php
 $Bot = new TelegramBot("YOUR_TOKEN");
 ```
 
