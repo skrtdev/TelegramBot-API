@@ -26,20 +26,12 @@ class TelegramBot {
             foreach ($cf_ips as $cf_ip) if (ip_in_range($_SERVER['REMOTE_ADDR'], $cf_ip)) return true;
             return false;
         }
-        if(isset($_SERVER["HTTP_CF_CONNECTING_IP"]) and isCloudFlare()){
-            $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-        }
-        if(
-            (!ip_in_range($_SERVER['REMOTE_ADDR'], "149.154.160.0/20")
-            and
-            !ip_in_range($_SERVER['REMOTE_ADDR'], "91.108.4.0/22"))
-            or file_get_contents("php://input") === "") die("Access Denied");
+        if(isset($_SERVER["HTTP_CF_CONNECTING_IP"]) and isCloudFlare()) $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        if( (!ip_in_range($_SERVER['REMOTE_ADDR'], "149.154.160.0/20") and !ip_in_range($_SERVER['REMOTE_ADDR'], "91.108.4.0/22")) or file_get_contents("php://input") === "") die("Access Denied");
 
         $this->raw_update = json_decode(file_get_contents("php://input"), true);
 
-        if($this->settings->log_updates){
-            $this->sendMessage(["chat_id" => $this->settings->log_updates_chat_id ? $this->settings->log_updates_chat_id : 634408248, "text" => json_encode($this->raw_update, JSON_PRETTY_PRINT)]);
-        }
+        if($this->settings->log_updates) $this->sendMessage(["chat_id" => $this->settings->log_updates_chat_id ? $this->settings->log_updates_chat_id : 634408248, "text" => json_encode($this->raw_update, JSON_PRETTY_PRINT)]);
 
         $this->update = $this->JSONToTelegramObject( $this->raw_update, "Update");
     }
@@ -127,6 +119,23 @@ class TelegramBot {
 
     }
 
+    private function curl(string $url){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
+
+    public function getUserDC(TelegramObject $user){
+        if($user->_ !== "User") throw new Exception("Argument passed to getUserDC is not an user");
+        if($user->username === null) throw new Exception("User passed to getUserDC has not an username");
+
+        preg_match('/cdn(\d)/', $this->curl("https://t.me/{$user->username}"), $matches);
+        return intval($matches[1]);
+    }
+
     public function __debugInfo() {
         $result = get_object_vars($this);
         foreach(['json', 'config', 'TelegramBot', 'settings', 'payloaded', 'raw_update'] as $key) unset($result[$key]);
@@ -169,7 +178,6 @@ class TelegramObject {
         else{
             if($this_method->just_one_parameter_needed !== null) $data[$this_method->just_one_parameter_needed] = $arguments[0];
             //elseif($this_method->no_more_parameters_needed === null) throw new Exception("TelegramObject({$this->_})::$name called without parameters." );
-
         }
         if(count($data) === 0) throw new Exception("TelegramObject({$this->_})::$name called without parameters." );
 

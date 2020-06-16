@@ -4,6 +4,6 @@
     ],
     "import":[
         "json.json"
-    ]
+    ],
     "look_for_updates": 3600
 }
