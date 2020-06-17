@@ -9,8 +9,7 @@ class TelegramBot {
         $this->token = $token;
         $this->file = "https://api.telegram.org/file/bot$token/";
         $this->settings = (object) $settings;
-
-        $this->json = json_decode(implode(file(dirname(__FILE__)."/json.json")), true);
+        $this->json = json_decode(implode(file(__DIR__."/json.json")), true);
 
         function ip_in_range( $ip, $range ) {
             if ( strpos( $range, '/' ) === false ) $range .= '/32';
@@ -60,7 +59,7 @@ class TelegramBot {
 
         if($decoded['ok'] !== true){
             if($this->settings->debug){
-                return $this->sendMessage(["chat_id" => $this->settings->log_updates_chat_id ? $this->settings->log_updates_chat_id : 634408248, "text" => print_r($decoded, true)]);
+                return $this->sendMessage(["chat_id" => $this->settings->log_updates_chat_id ? $this->settings->log_updates_chat_id : 634408248, "text" => $method.PHP_EOL.PHP_EOL.print_r($data, true).PHP_EOL.PHP_EOL.print_r($decoded, true)]);
             }
             return (object) $decoded;
         }
@@ -106,7 +105,6 @@ class TelegramBot {
 
         foreach($json as $key => $value){
             if(gettype($value) === "array"){
-
                 if(gettype($key) === "integer"){
                     if($this->getObjectType($childs_name)) $json[$key] = $this->TelegramObjectArrayToTelegramObject($value, $childs_name);
                     else $json[$key] = new TelegramObject($childs_name, $value, $this);
@@ -131,7 +129,6 @@ class TelegramBot {
     public function getUserDC(TelegramObject $user){
         if($user->_ !== "User") throw new Exception("Argument passed to getUserDC is not an user");
         if($user->username === null) throw new Exception("User passed to getUserDC has not an username");
-
         preg_match('/cdn(\d)/', $this->curl("https://t.me/{$user->username}"), $matches);
         return intval($matches[1]);
     }
@@ -157,7 +154,7 @@ class TelegramObject {
             $this->$key = $value;
         }
 
-        $this->config = json_decode(implode(file(dirname(__FILE__)."/json.json")));
+        $this->config = json_decode(implode(file(__DIR__."/json.json")));
     }
     public function __call(string $name, array $arguments){
         $this_obj = $this->config->types_methods->{$this->_};
@@ -175,7 +172,7 @@ class TelegramObject {
         if(gettype($arguments[0]) === "array") foreach ($arguments[0] as $key => $value) {
             $data[$key] = $value;
         }
-        else{
+        elseif(isset($arguments[0])){
             if($this_method->just_one_parameter_needed !== null) $data[$this_method->just_one_parameter_needed] = $arguments[0];
             //elseif($this_method->no_more_parameters_needed === null) throw new Exception("TelegramObject({$this->_})::$name called without parameters." );
         }

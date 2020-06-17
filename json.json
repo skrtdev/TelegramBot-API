@@ -197,7 +197,8 @@
 			"forward":{
 				"alias":"forwardMessage",
 				"presets":{
-					"from_chat_id":"chat/id"
+					"from_chat_id":"chat/id",
+					"chat_id":"chat/id"
 				},
 				"just_one_parameter_needed":"chat_id"
 			},
