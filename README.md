@@ -1,2 +1,2 @@
 # Moved
-This package has benn moved to [NovaGram](https://github.com/skrtdev/NovaGram)
+This package has been moved to [NovaGram](https://github.com/skrtdev/NovaGram)
